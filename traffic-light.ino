@@ -260,25 +260,3 @@ void loop()
     }
   }
 }
-
-
-/*
-TEST switch to green
-
-  FIRST CYCLE
-
-    1. Press button after 40 seconds      PASS!!
-      YELLOW_PHASE starts after 10 seconds -> start at second 50
-    
-    2. Press button after 10 seconds      PASS!!
-      YELLOW_PHASE starts after 20 seconds -> start at second 30
-
-
-  n CYCLE
-
-    1. Press button after 40 seconds      PASS!!
-      YELLOW_PHASE starts after 10 seconds
-    
-    2. Press button after 10 seconds      PASS!!
-      YELLOW_PHASE starts after 20 seconds
-*/
