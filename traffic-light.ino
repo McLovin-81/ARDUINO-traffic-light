@@ -1,3 +1,27 @@
+/*
+ * TrafficLightController
+ *
+ * The program simulates a basic traffic light system with green, yellow, red, and red-yellow phases
+ * for cars, along with corresponding pedestrian signals.
+ *
+ * Developed by: Cristian Felipe Castillo Barrero
+ * Date: 2024-03-19
+ *
+ * Pin 10: Red LED for Cars
+ * Pin 9: Yellow LED for Cars
+ * Pin 8: Green LED for Cars
+ * Pin 3: Red LED for Pedestrians
+ * Pin 2: Green LED for Pedestrians
+ * Pin 7: LED for Flashing
+ * Pin 5: Push Button
+ * Pin 12: Trigger Pin for Distance Sensor
+ * Pin 13: Echo Pin for Distance Sensor
+ * Pin GND (Ground): ground rail (-) on the breadboard
+ * Pin 5V: (+) rail on the breadboard
+ * 
+*/
+
+
 const int redCar = 10;       // Pin for the red light of cars
 const int yellowCar = 9;    // Pin for the yellow light of cars
 const int greenCar = 8;     // Pin for the green light of cars
@@ -24,6 +48,41 @@ int buttonState;
 unsigned long lastGreenPhaseTimeStamp = 0;
 unsigned long milliCounter; // Required for delay
 unsigned long greenPhaseDuration;
+
+
+/**
+ * @brief Generate a trigger signal for the distance sensor and check if the distance is lower than 10cm to activate a blitzer.
+ *
+ * @param None.
+ * 
+ * @details This function sets the trigger pin of the distance sensor to HIGH to initiate a measurement signal,
+ * delays for a short duration to ensure the trigger signal is stable, and then sets the trigger pin back to LOW
+ * to end the measurement signal. It then checks if the distance is lower than 10cm and activates a blitzer accordingly.
+ * 
+ * @note Ensure that the appropriate pins are configured for the distance sensor, blitzer LED, and that the appropriate delay is applied.
+ * 
+ * @return None.
+ */
+void triggerAndCheckDistance()
+{
+  // Set the trigger pin of the distance sensor to HIGH to initiate a measurement signal.
+  digitalWrite(dSensorTrig, HIGH);
+  // Delay for a short duration to ensure the trigger signal is stable.
+  delayMicroseconds(1000);
+  // Set the trigger pin of the distance sensor back to LOW to end the measurement signal.
+  digitalWrite(dSensorTrig, LOW);
+
+  // If the distance is lower than 10 cm, activate blitzer
+  if (pulseIn(dSensorEcho, HIGH) / 58 <= 10)
+  {
+    digitalWrite(flashLED, HIGH);
+    delay(10);
+    digitalWrite(flashLED, LOW);
+
+    // Wait 1 second for the next action
+    delay(1000);
+  }
+}
 
 
 /**
@@ -96,50 +155,21 @@ void redPhase()
   digitalWrite(redWalkers, LOW);
   digitalWrite(greenWalkers, HIGH);
 
-  // Delay 12 sec. //
+  // Speed camera // 
   milliCounter = millis();
   while (millis() - milliCounter <= 12000)
   {
-    // Make blitzer
-    digitalWrite(dSensorTrig, HIGH);
-    delayMicroseconds(1000);
-    digitalWrite(dSensorTrig, LOW);
-
-    // If the distance is lowert than 10 cm, make blitzer
-    if (pulseIn(dSensorEcho, HIGH) / 58 <= 10)
-    {
-      digitalWrite(flashLED, HIGH);
-      delay(10);
-      digitalWrite(flashLED, LOW);
-
-      // Wait 1 seconds for the next car
-      delay(1000);
-    }
+    triggerAndCheckDistance();
   }
 
   digitalWrite(redWalkers, HIGH);
   digitalWrite(greenWalkers, LOW);
 
-  
-  // Delay 3 sec. //
+  // Speed camera //
   milliCounter = millis();
   while (millis() - milliCounter <= 3000)
   {
-    // Make blitzer
-    digitalWrite(dSensorTrig, HIGH);
-    delayMicroseconds(1000);
-    digitalWrite(dSensorTrig, LOW);
-
-    // If the distance is lowert than 10 cm, make blitzer
-    if (pulseIn(dSensorEcho, HIGH) / 58 <= 10)
-    {
-      digitalWrite(flashLED, HIGH);
-      delay(10);
-      digitalWrite(flashLED, LOW);
-
-      // Wait 1 seconds for the next car
-      delay(1000);
-    }
+    triggerAndCheckDistance();
   }
 
   trafficLightState = RED_YELLOW_PHASE;
@@ -167,10 +197,17 @@ void redYellowPhase()
   digitalWrite(redWalkers, HIGH);
   digitalWrite(greenWalkers, LOW);
 
-  delay(3000);
+  // Speed camera //
+  milliCounter = millis();
+  while (millis() - milliCounter <= 3000)
+  {
+    triggerAndCheckDistance();
+  }
+
   trafficLightState = GREEN_PHASE;
   lastGreenPhaseTimeStamp = millis();
 }
+
 
 /**
  * @brief Set up the pin modes for the components used in the traffic light system.
