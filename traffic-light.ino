@@ -1,16 +1,16 @@
-const int redCar = 2;       // Pin for the red light of cars
-const int yellowCar = 4;    // Pin for the yellow light of cars
-const int greenCar = 7;     // Pin for the green light of cars
+const int redCar = 10;       // Pin for the red light of cars
+const int yellowCar = 9;    // Pin for the yellow light of cars
+const int greenCar = 8;     // Pin for the green light of cars
 
-const int redWalkers = 8;   // Pin for the red light of pedestrians
-const int greenWalkers = 10;// Pin for the green light of pedestrians
+const int redWalkers = 3;   // Pin for the red light of pedestrians
+const int greenWalkers = 2;// Pin for the green light of pedestrians
 
-const int flashLED = 3;     // Pin for the flash LED
+const int flashLED = 7;     // Pin for the flash LED
 
-const int pushButton = 12;  // Pin for the push button
+const int pushButton = 5;  // Pin for the push button
 
-const int dSensorTrig = 5;  // Pin for the trigger of distance sensor
-const int dSensorEcho = 6;  // Pin for the echo of distance sensor
+const int dSensorTrig = 12;  // Pin for the trigger of distance sensor
+const int dSensorEcho = 13;  // Pin for the echo of distance sensor
 
 
 enum TrafficLightStates {GREEN_PHASE, YELLOW_PHASE, RED_PHASE, RED_YELLOW_PHASE};
@@ -105,8 +105,8 @@ void redPhase()
     delayMicroseconds(1000);
     digitalWrite(dSensorTrig, LOW);
 
-    // If the distance is lowert than 100 cm, make blitzer
-    if (pulseIn(dSensorEcho, HIGH) / 58 <= 100)
+    // If the distance is lowert than 10 cm, make blitzer
+    if (pulseIn(dSensorEcho, HIGH) / 58 <= 10)
     {
       digitalWrite(flashLED, HIGH);
       delay(10);
@@ -130,8 +130,8 @@ void redPhase()
     delayMicroseconds(1000);
     digitalWrite(dSensorTrig, LOW);
 
-    // If the distance is lowert than 100 cm, make blitzer
-    if (pulseIn(dSensorEcho, HIGH) / 58 <= 100)
+    // If the distance is lowert than 10 cm, make blitzer
+    if (pulseIn(dSensorEcho, HIGH) / 58 <= 10)
     {
       digitalWrite(flashLED, HIGH);
       delay(10);
