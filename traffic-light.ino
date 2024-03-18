@@ -139,7 +139,7 @@ void yellowPhase()
  * @param None.
  * 
  * @details This function turns on the red light for cars and the green light for pedestrians, indicating the red phase.
- * It activates a blitzer for cars for 12 seconds and a blitzer for pedestrians for 3 seconds.
+ * It activates a blitzer for cars for 15 seconds.
  * After that, it transitions to the red-yellow phase.
  * 
  * @note Ensure that the appropriate pins are configured for the traffic lights and sensors.
